@@ -4,11 +4,11 @@ using NotificationMicroservice.Interfaces;
 
 namespace NotificationMicroservice.Providers;
 
-public class TwilioSmsProvider : INotificationProvider
+public class AmazonSmsProvider : INotificationProvider
 {
     public bool IsEnabled => true;
-    public string Name => "TwilioSms";
-    public int Priority => 2;
+    public string Name => "AmazonSms";
+    public int Priority => 1;
     public ChannelType SupportedChannel => ChannelType.Sms;
 
     public async Task<bool> SendAsync(Notification notification)

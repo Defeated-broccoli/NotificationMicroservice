@@ -28,6 +28,10 @@ namespace NotificationMicroservice
             builder.Services.AddScoped<INotificationProvider, TwilioEmailProvider>();
             builder.Services.AddScoped<INotificationProvider, TwilioPushProvider>();
 
+            builder.Services.AddScoped<INotificationProvider, AmazonSmsProvider>();
+            builder.Services.AddScoped<INotificationProvider, AmazonEmailProvider>();
+            builder.Services.AddScoped<INotificationProvider, AmazonPushProvider>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
