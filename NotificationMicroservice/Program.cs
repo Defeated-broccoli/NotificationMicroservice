@@ -3,11 +3,13 @@ using Hangfire;
 using Hangfire.MemoryStorage;
 using Hangfire.Server;
 using NotificationMicroservice.BackgroundWorkers;
+using NotificationMicroservice.Entities;
 using NotificationMicroservice.Handlers;
 using NotificationMicroservice.Interfaces;
 using NotificationMicroservice.Providers;
 using NotificationMicroservice.Service;
 using NotificationMicroservice.Services;
+using NotificationMicroservice.Validators;
 
 namespace NotificationMicroservice
 {
@@ -43,6 +45,9 @@ namespace NotificationMicroservice
             builder.Services.AddScoped<INotificationProvider, AmazonSmsProvider>();
             builder.Services.AddScoped<INotificationProvider, AmazonEmailProvider>();
             builder.Services.AddScoped<INotificationProvider, AmazonPushProvider>();
+
+            // validators
+            builder.Services.AddScoped<IValidator<NotificationDto>, NotificationValidator>();
 
             // background workers
             builder.Services.AddScoped<SendNotificationWorker>();

@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using NotificationMicroservice.Entities;
+using NotificationMicroservice.Interfaces;
 using NotificationMicroservice.Service;
+using NotificationMicroservice.Validators;
 
 namespace NotificationMicroservice.Controllers;
 
@@ -9,18 +11,22 @@ namespace NotificationMicroservice.Controllers;
 public class NotificationsController : ControllerBase
 {
     private readonly NotificationService _notificationService;
+    private readonly IValidator<NotificationDto> _notificationValidator;
 
-    public NotificationsController(NotificationService notificationService)
+    public NotificationsController(NotificationService notificationService, IValidator<NotificationDto> notificationValidator)
     {
         _notificationService = notificationService;
+        _notificationValidator = notificationValidator;
     }
 
     [HttpPost]
     public async Task<IActionResult> Send([FromBody] NotificationDto dto)
     {
-        if (dto == null)
+        var validationResult = _notificationValidator.Validate(dto);
+
+        if (!validationResult.IsValid)
         {
-            return BadRequest("Notification data is required.");
+            return BadRequest(new { message = validationResult.ErrorMessage });
         }
 
         var notification = new Notification(dto.Recipient, dto.Message, dto.Channel);
@@ -28,9 +34,9 @@ public class NotificationsController : ControllerBase
 
         if (result == false)
         {
-            return StatusCode(500, "Failed to send notification.");
+            return StatusCode(503, new { message = "Failed to send notification." });
         }
 
-        return Ok("Notification sent (or queued).");
+        return Ok(new { message = "Notification queued for sending " });
     }
 }
