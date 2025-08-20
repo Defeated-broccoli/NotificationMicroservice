@@ -1,6 +1,8 @@
-﻿using NotificationMicroservice.Entities;
+﻿using Amazon.SQS;
+using NotificationMicroservice.Entities;
 using NotificationMicroservice.Enums;
 using NotificationMicroservice.Interfaces;
+using System.Text.Json.Serialization;
 
 namespace NotificationMicroservice.Providers;
 
@@ -15,8 +17,6 @@ public class AmazonSmsProvider : INotificationProvider
     {
         try
         {
-            // Call Twilio SDK (skeleton)
-            Console.WriteLine($"[Twilio] Sending SMS to {notification.Recipient}: {notification.Message}");
             return true;
         }
         catch

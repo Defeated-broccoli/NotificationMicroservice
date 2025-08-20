@@ -7,6 +7,6 @@ namespace NotificationMicroservice.Interfaces
     {
         ChannelType SupportedChannel { get; }
 
-        Task SendAsync(Notification notification);
+        Task<bool> SendAsync(Notification notification);
     }
 }

@@ -1,4 +1,5 @@
-﻿using NotificationMicroservice.Entities;
+﻿using Amazon.SQS;
+using NotificationMicroservice.Entities;
 using NotificationMicroservice.Enums;
 using NotificationMicroservice.Interfaces;
 

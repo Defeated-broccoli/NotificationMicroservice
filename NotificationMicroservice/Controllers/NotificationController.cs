@@ -24,7 +24,13 @@ public class NotificationsController : ControllerBase
         }
 
         var notification = new Notification(dto.Recipient, dto.Message, dto.Channel);
-        await _notificationService.SendAsync(notification);
+        var result = await _notificationService.SendAsync(notification);
+
+        if (result == false)
+        {
+            return StatusCode(500, "Failed to send notification.");
+        }
+
         return Ok("Notification sent (or queued).");
     }
 }

@@ -6,12 +6,14 @@ public class Notification
 {
     public Notification(string recipient, string message, ChannelType channel)
     {
+        Id = Guid.NewGuid().ToString();
         Recipient = recipient;
         Message = message;
         Channel = channel;
     }
 
-    public ChannelType Channel { get; set; }
-    public string Message { get; set; }
-    public string Recipient { get; set; }
+    public ChannelType Channel { get; init; }
+    public string Id { get; init; }
+    public string Message { get; init; }
+    public string Recipient { get; init; }
 }

@@ -1,27 +1,19 @@
 ﻿using NotificationMicroservice.Entities;
-using NotificationMicroservice.Enums;
 using NotificationMicroservice.Interfaces;
 
 namespace NotificationMicroservice.Service;
 
 public class NotificationService
 {
-    private readonly Dictionary<ChannelType, IChannelHandler> _handlers;
+    private readonly IQueueService _queueService;
 
-    public NotificationService(IEnumerable<IChannelHandler> handlers)
+    public NotificationService(IQueueService queueService)
     {
-        _handlers = handlers.ToDictionary(h => h.SupportedChannel);
+        _queueService = queueService;
     }
 
-    public async Task SendAsync(Notification notification)
+    public async Task<bool> SendAsync(Notification notification)
     {
-        if (_handlers.TryGetValue(notification.Channel, out var handler))
-        {
-            await handler.SendAsync(notification);
-        }
-        else
-        {
-            throw new NotSupportedException($"Channel {notification.Channel} not supported");
-        }
+        return await _queueService.EnqueueMessage(notification);
     }
 }

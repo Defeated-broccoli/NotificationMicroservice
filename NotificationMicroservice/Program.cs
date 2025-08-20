@@ -1,7 +1,13 @@
+using Amazon.SQS;
+using Hangfire;
+using Hangfire.MemoryStorage;
+using Hangfire.Server;
+using NotificationMicroservice.BackgroundWorkers;
 using NotificationMicroservice.Handlers;
 using NotificationMicroservice.Interfaces;
 using NotificationMicroservice.Providers;
 using NotificationMicroservice.Service;
+using NotificationMicroservice.Services;
 
 namespace NotificationMicroservice
 {
@@ -19,11 +25,17 @@ namespace NotificationMicroservice
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddScoped<NotificationService>();
+            builder.Services.AddScoped<IQueueService, QueueService>();
 
+            builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
+            builder.Services.AddAWSService<IAmazonSQS>();
+
+            // handlers
             builder.Services.AddScoped<IChannelHandler, EmailChannelHandler>();
             builder.Services.AddScoped<IChannelHandler, SmsChannelHandler>();
             builder.Services.AddScoped<IChannelHandler, PushChannelHandler>();
 
+            // providers
             builder.Services.AddScoped<INotificationProvider, TwilioSmsProvider>();
             builder.Services.AddScoped<INotificationProvider, TwilioEmailProvider>();
             builder.Services.AddScoped<INotificationProvider, TwilioPushProvider>();
@@ -31,6 +43,16 @@ namespace NotificationMicroservice
             builder.Services.AddScoped<INotificationProvider, AmazonSmsProvider>();
             builder.Services.AddScoped<INotificationProvider, AmazonEmailProvider>();
             builder.Services.AddScoped<INotificationProvider, AmazonPushProvider>();
+
+            // background workers
+            builder.Services.AddScoped<SendNotificationWorker>();
+
+            // hangfire
+            builder.Services.AddHangfire(config =>
+            {
+                config.UseMemoryStorage();
+            });
+            builder.Services.AddHangfireServer();
 
             var app = builder.Build();
 
@@ -46,6 +68,18 @@ namespace NotificationMicroservice
             app.UseAuthorization();
 
             app.MapControllers();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var recurringJobManager = scope.ServiceProvider.GetRequiredService<IRecurringJobManager>();
+                var worker = scope.ServiceProvider.GetRequiredService<SendNotificationWorker>();
+
+                recurringJobManager.AddOrUpdate(
+                    "send-notifications-job",
+                    () => worker.ExecuteAsync(),
+                    "*/2 * * * *"
+                );
+            }
 
             app.Run();
         }
