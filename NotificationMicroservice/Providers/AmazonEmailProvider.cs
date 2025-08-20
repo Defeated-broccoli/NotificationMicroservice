@@ -1,4 +1,6 @@
-﻿using NotificationMicroservice.Entities;
+﻿using Amazon.SimpleEmailV2;
+using Amazon.SimpleEmailV2.Model;
+using NotificationMicroservice.Entities;
 using NotificationMicroservice.Enums;
 using NotificationMicroservice.Interfaces;
 
@@ -6,6 +8,13 @@ namespace NotificationMicroservice.Providers;
 
 public class AmazonEmailProvider : INotificationProvider
 {
+    private readonly IAmazonSimpleEmailServiceV2 _sesService;
+
+    public AmazonEmailProvider(IAmazonSimpleEmailServiceV2 sesService)
+    {
+        _sesService = sesService;
+    }
+
     public bool IsEnabled => true;
 
     public string Name => "AmazonEmail";
@@ -18,9 +27,34 @@ public class AmazonEmailProvider : INotificationProvider
     {
         try
         {
-            // Call Twilio SDK (skeleton)
-            Console.WriteLine($"[Twilio] Sending SMS to {notification.Recipient}: {notification.Message}");
-            return true;
+            var request = new SendEmailRequest
+            {
+                FromEmailAddress = "example@gmail.com",
+                Destination = new Destination
+                {
+                    ToAddresses = [notification.Recipient]
+                },
+                Content = new EmailContent
+                {
+                    Simple = new Message
+                    {
+                        Subject = new Content
+                        {
+                            Data = "Notification"
+                        },
+                        Body = new Body
+                        {
+                            Text = new Content
+                            {
+                                Data = notification.Message,
+                            }
+                        }
+                    }
+                }
+            };
+
+            var response = await _sesService.SendEmailAsync(request);
+            return response.HttpStatusCode == System.Net.HttpStatusCode.OK;
         }
         catch
         {

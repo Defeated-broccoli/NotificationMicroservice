@@ -8,13 +8,12 @@ namespace NotificationMicroservice.Services;
 public class QueueService : IQueueService
 {
     private readonly IAmazonSQS _amazonSQS;
+    private readonly string _queueUrl;
 
-    private string _queueUrl = Environment.GetEnvironmentVariable("AWS_QUEUE_URL")
-        ?? throw new InvalidOperationException("AWS_QUEUE_URL not set");
-
-    public QueueService(IAmazonSQS amazonSQS)
+    public QueueService(IAmazonSQS amazonSQS, IConfiguration configuration)
     {
         _amazonSQS = amazonSQS;
+        _queueUrl = configuration["AWS:QueueUrl"] ?? throw new Exception("AWS:QueueUrl is not set.");
     }
 
     public async Task<bool> EnqueueMessage(Notification notification)

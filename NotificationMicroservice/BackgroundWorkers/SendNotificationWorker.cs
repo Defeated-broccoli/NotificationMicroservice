@@ -11,13 +11,13 @@ public class SendNotificationWorker : IBackgroundWorker
     private readonly IAmazonSQS _amazonSqs;
     private readonly Dictionary<ChannelType, IChannelHandler> _handlers;
 
-    private string _queueUrl = Environment.GetEnvironmentVariable("AWS_QUEUE_URL")
-            ?? throw new InvalidOperationException("AWS_QUEUE_URL not set");
+    private string _queueUrl;
 
-    public SendNotificationWorker(IAmazonSQS amazonSqs, IEnumerable<IChannelHandler> handlers)
+    public SendNotificationWorker(IAmazonSQS amazonSqs, IEnumerable<IChannelHandler> handlers, IConfiguration configuration)
     {
         _amazonSqs = amazonSqs;
         _handlers = handlers.ToDictionary(h => h.SupportedChannel);
+        _queueUrl = configuration["AWS:QueueUrl"] ?? throw new Exception("AWS:QueueUrl is not set.");
     }
 
     public async Task ExecuteAsync()

@@ -1,7 +1,7 @@
+using Amazon.SimpleEmailV2;
 using Amazon.SQS;
 using Hangfire;
 using Hangfire.MemoryStorage;
-using Hangfire.Server;
 using NotificationMicroservice.BackgroundWorkers;
 using NotificationMicroservice.Entities;
 using NotificationMicroservice.Handlers;
@@ -31,6 +31,7 @@ namespace NotificationMicroservice
 
             builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
             builder.Services.AddAWSService<IAmazonSQS>();
+            builder.Services.AddAWSService<IAmazonSimpleEmailServiceV2>();
 
             // handlers
             builder.Services.AddScoped<IChannelHandler, EmailChannelHandler>();
