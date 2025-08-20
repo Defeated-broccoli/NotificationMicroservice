@@ -29,7 +29,7 @@ public class AmazonEmailProvider : INotificationProvider
         {
             var request = new SendEmailRequest
             {
-                FromEmailAddress = "example@gmail.com",
+                FromEmailAddress = notification.Sender,
                 Destination = new Destination
                 {
                     ToAddresses = [notification.Recipient]
@@ -56,8 +56,9 @@ public class AmazonEmailProvider : INotificationProvider
             var response = await _sesService.SendEmailAsync(request);
             return response.HttpStatusCode == System.Net.HttpStatusCode.OK;
         }
-        catch
+        catch (Exception ex)
         {
+            Console.Error.WriteLine($"Error sending email: {ex.Message}");
             return false;
         }
     }

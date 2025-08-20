@@ -29,7 +29,7 @@ public class NotificationsController : ControllerBase
             return BadRequest(new { message = validationResult.ErrorMessage });
         }
 
-        var notification = new Notification(dto.Recipient, dto.Message, dto.Channel);
+        var notification = new Notification(dto.Recipient, dto.Message, dto.Channel, dto.Sender);
         var result = await _notificationService.SendAsync(notification);
 
         if (result == false)

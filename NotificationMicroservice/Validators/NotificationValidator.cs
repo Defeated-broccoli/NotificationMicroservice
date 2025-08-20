@@ -17,21 +17,35 @@ public class NotificationValidator : IValidator<NotificationDto>
         if (string.IsNullOrWhiteSpace(entity.Message))
             return new ValidationResult(false, "Message cannot be empty");
 
-        return entity.Channel switch
+        switch (entity.Channel)
         {
-            ChannelType.Email =>
-                new System.ComponentModel.DataAnnotations.EmailAddressAttribute().IsValid(entity.Recipient)
-                    ? new ValidationResult(true)
-                    : new ValidationResult(false, "Invalid email address"),
+            case ChannelType.Email:
+                if (!new System.ComponentModel.DataAnnotations.EmailAddressAttribute().IsValid(entity.Recipient))
+                {
+                    return new ValidationResult(false, "Invalid recipient email address");
+                }
 
-            ChannelType.Sms =>
-                new System.ComponentModel.DataAnnotations.PhoneAttribute().IsValid(entity.Recipient)
-                    ? new ValidationResult(true)
-                    : new ValidationResult(false, "Invalid phone number"),
+                if (!new System.ComponentModel.DataAnnotations.EmailAddressAttribute().IsValid(entity.Sender))
+                {
+                    return new ValidationResult(false, "Invalid sender email address");
+                }
 
-            ChannelType.Push => new ValidationResult(true),
+                break;
 
-            _ => new ValidationResult(false, "Unsupported channel type")
-        };
+            case ChannelType.Sms:
+                if (!new System.ComponentModel.DataAnnotations.PhoneAttribute().IsValid(entity.Recipient))
+                {
+                    return new ValidationResult(false, "Invalid recipient phone number");
+                }
+
+                if (!new System.ComponentModel.DataAnnotations.PhoneAttribute().IsValid(entity.Sender))
+                {
+                    return new ValidationResult(false, "Invalid sender phone number");
+                }
+
+                break;
+        }
+
+        return new ValidationResult(true);
     }
 }

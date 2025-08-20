@@ -40,6 +40,11 @@ public class SendNotificationWorker : IBackgroundWorker
             return;
         }
 
+        if (response.Messages == null || response.Messages.Count == 0)
+        {
+            return;
+        }
+
         foreach (var message in response.Messages)
         {
             try

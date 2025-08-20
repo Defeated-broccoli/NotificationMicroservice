@@ -10,4 +10,6 @@ public class NotificationDto
     public string Message { get; set; }
 
     public string Recipient { get; set; }
+
+    public string Sender { get; set; }
 }
