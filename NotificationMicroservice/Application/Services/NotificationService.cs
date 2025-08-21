@@ -3,7 +3,7 @@ using NotificationMicroservice.Entities;
 
 namespace NotificationMicroservice.Application.Services;
 
-public class NotificationService
+public class NotificationService : INotificationService
 {
     private readonly IQueueService _queueService;
 

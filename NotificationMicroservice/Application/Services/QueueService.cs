@@ -2,7 +2,6 @@
 using Amazon.SQS.Model;
 using NotificationMicroservice.Application.Interfaces;
 using NotificationMicroservice.Entities;
-using NotificationMicroservice.Infrastructure.Dtos;
 using NotificationMicroservice.Infrastructure.Mappers;
 
 namespace NotificationMicroservice.Application.Services;

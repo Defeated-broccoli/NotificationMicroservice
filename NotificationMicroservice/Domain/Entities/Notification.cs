@@ -3,6 +3,7 @@ using NotificationMicroservice.Api.Dtos;
 using NotificationMicroservice.Domain.Common;
 using NotificationMicroservice.Domain.Enums;
 using NotificationMicroservice.Domain.ValueObjects;
+using NotificationMicroservice.Resources;
 
 namespace NotificationMicroservice.Entities;
 
@@ -45,27 +46,27 @@ public sealed class Notification
     public static Result<Notification> TryCreate(INotificationDto dto)
     {
         if (!MessageBody.TryCreate(dto.Body, out var body))
-            return Result<Notification>.Failure("Invalid message body");
+            return Result<Notification>.Failure(NotificationMessages.InvalidMessageBodyErrorMessage);
 
         Notification notification;
         switch (dto.Channel)
         {
             case ChannelType.Email:
                 if (!EmailAddress.TryCreate(dto.Recipient, out var toEmail))
-                    return Result<Notification>.Failure("Invalid recipient email address");
+                    return Result<Notification>.Failure(NotificationMessages.InvalidRecipientEmailAddressErrorMessage);
 
                 if (!EmailAddress.TryCreate(dto.Sender, out var fromEmail))
-                    return Result<Notification>.Failure("Invalid sender email address");
+                    return Result<Notification>.Failure(NotificationMessages.InvalidSenderEmailAddressErrorMessage);
 
                 notification = new Notification(dto.Channel, body, fromEmail, toEmail, null, null, dto.Subject ?? "");
                 return Result<Notification>.Success(notification);
 
             case ChannelType.Sms:
                 if (!PhoneNumber.TryCreate(dto.Recipient, out var fromPhone))
-                    return Result<Notification>.Failure("Invalid recipient phone number");
+                    return Result<Notification>.Failure(NotificationMessages.InvalidRecipientNumberPhoneErrorMessage);
 
                 if (!PhoneNumber.TryCreate(dto.Sender, out var toPhone))
-                    return Result<Notification>.Failure("Invalid sender phone number");
+                    return Result<Notification>.Failure(NotificationMessages.InvalidSenderNumberPhoneErrorMessage);
 
                 notification = new Notification(dto.Channel, body, null, null, fromPhone, toPhone, null);
                 return Result<Notification>.Success(notification);

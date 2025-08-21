@@ -24,7 +24,7 @@ namespace NotificationMicroservice
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddScoped<NotificationService>();
+            builder.Services.AddScoped<INotificationService, NotificationService>();
             builder.Services.AddScoped<IQueueService, QueueService>();
 
             builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());

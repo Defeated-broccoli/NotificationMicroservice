@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using NotificationMicroservice.Api.Dtos;
-using NotificationMicroservice.Application.Services;
+using NotificationMicroservice.Application.Interfaces;
 using NotificationMicroservice.Entities;
+using NotificationMicroservice.Resources;
 
 namespace NotificationMicroservice.Api.Controllers;
 
@@ -9,9 +10,9 @@ namespace NotificationMicroservice.Api.Controllers;
 [Route("[controller]")]
 public class NotificationsController : ControllerBase
 {
-    private readonly NotificationService _notificationService;
+    private readonly INotificationService _notificationService;
 
-    public NotificationsController(NotificationService notificationService)
+    public NotificationsController(INotificationService notificationService)
     {
         _notificationService = notificationService;
     }
@@ -30,9 +31,9 @@ public class NotificationsController : ControllerBase
 
         if (result == false)
         {
-            return StatusCode(503, new { message = "Failed to send notification." });
+            return StatusCode(503, new { message = NotificationMessages.FailedToSendNotification });
         }
 
-        return Ok(new { message = "Notification queued for sending " });
+        return Ok(new { message = NotificationMessages.NotificationQueued });
     }
 }
