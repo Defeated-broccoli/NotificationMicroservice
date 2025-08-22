@@ -9,6 +9,8 @@ public abstract class BaseChannelHandler : IChannelHandler
 {
     protected readonly IEnumerable<INotificationProvider> _providers;
 
+    public abstract ChannelType SupportedChannel { get; }
+
     protected BaseChannelHandler(IEnumerable<INotificationProvider> providers)
     {
         _providers = providers
@@ -16,8 +18,6 @@ public abstract class BaseChannelHandler : IChannelHandler
             .OrderBy(p => p.Priority)
             .ToList();
     }
-
-    public abstract ChannelType SupportedChannel { get; }
 
     public async Task<bool> SendAsync(Notification notification)
     {

@@ -1,5 +1,4 @@
 ﻿using NotificationMicroservice.Abstractions;
-using NotificationMicroservice.Api.Dtos;
 using NotificationMicroservice.Domain.Common;
 using NotificationMicroservice.Domain.Enums;
 using NotificationMicroservice.Domain.ValueObjects;
