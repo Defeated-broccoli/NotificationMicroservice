@@ -17,7 +17,7 @@ public class QueueService : IQueueService
         _queueUrl = configuration["AWS:QueueUrl"] ?? throw new Exception("AWS:QueueUrl is not set.");
     }
 
-    public async Task<bool> EnqueueMessage(Notification notification)
+    public async Task<bool> EnqueueNotification(Notification notification)
     {
         var notificationSqs = NotificationMapper.ToSqsDto(notification);
 

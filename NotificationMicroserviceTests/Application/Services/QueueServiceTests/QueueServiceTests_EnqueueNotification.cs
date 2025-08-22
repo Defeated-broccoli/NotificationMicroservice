@@ -11,14 +11,14 @@ using System.Text.Json;
 
 namespace NotificationMicroserviceTests.Application.Services.QueueServiceTests;
 
-public class QueueServiceTests_EnqueueMessage : BaseTest
+public class QueueServiceTests_EnqueueNotification : BaseTest
 {
     private readonly Mock<IAmazonSQS> _amazonSQSMock = new();
     private readonly Mock<IConfiguration> _configurationMock = new();
     private readonly IQueueService _queueService;
     private readonly string _queueUrl = "https://url.com";
 
-    public QueueServiceTests_EnqueueMessage()
+    public QueueServiceTests_EnqueueNotification()
     {
         _configurationMock.Setup(c => c["AWS:QueueUrl"])
             .Returns(_queueUrl);
@@ -30,7 +30,7 @@ public class QueueServiceTests_EnqueueMessage : BaseTest
     }
 
     [Fact]
-    public async Task EnqueueMessage_ShouldReturnFalse_WhenMessageSendingFails()
+    public async Task EnqueueNotification_ShouldReturnFalse_WhenMessageSendingFails()
     {
         // arrange
         var notification = CreateNotification();
@@ -45,14 +45,14 @@ public class QueueServiceTests_EnqueueMessage : BaseTest
         ).ThrowsAsync(new Exception("SQS error"));
 
         // act
-        var result = await _queueService.EnqueueMessage(notification);
+        var result = await _queueService.EnqueueNotification(notification);
 
         // assert
         result.Should().BeFalse();
     }
 
     [Fact]
-    public async Task EnqueueMessage_ShouldReturnTrue_WhenMessageIsSentSuccessfully()
+    public async Task EnqueueNotification_ShouldReturnTrue_WhenMessageIsSentSuccessfully()
     {
         // arrange
         var notification = CreateNotification();
@@ -72,7 +72,7 @@ public class QueueServiceTests_EnqueueMessage : BaseTest
         );
 
         // act
-        var result = await _queueService.EnqueueMessage(notification);
+        var result = await _queueService.EnqueueNotification(notification);
 
         // assert
         result.Should().BeTrue();

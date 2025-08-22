@@ -25,7 +25,7 @@ public class NotificationServiceTests_SendAsync : BaseTest
         // arrange
         var notification = CreateNotification();
         _queueServiceMock
-            .Setup(q => q.EnqueueMessage(notification))
+            .Setup(q => q.EnqueueNotification(notification))
             .ReturnsAsync(isSuccess);
 
         // act

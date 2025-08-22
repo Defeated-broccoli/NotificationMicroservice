@@ -14,6 +14,6 @@ public class NotificationService : INotificationService
 
     public async Task<bool> SendAsync(Notification notification)
     {
-        return await _queueService.EnqueueMessage(notification);
+        return await _queueService.EnqueueNotification(notification);
     }
 }
