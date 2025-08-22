@@ -20,12 +20,12 @@ public class EmailChannelHandlerTests_SendAsync : BaseTest
     {
         _emailProviderMockPriority = new Mock<INotificationProvider>();
         _emailProviderMockPriority.Setup(p => p.IsEnabled).Returns(true);
-        _emailProviderMockPriority.Setup(p => p.Priority).Returns(100);
+        _emailProviderMockPriority.Setup(p => p.Priority).Returns(0);
         _emailProviderMockPriority.Setup(p => p.SupportedChannel).Returns(ChannelType.Email);
 
         _emailProviderMockNoPriority = new Mock<INotificationProvider>();
         _emailProviderMockNoPriority.Setup(p => p.IsEnabled).Returns(true);
-        _emailProviderMockNoPriority.Setup(p => p.Priority).Returns(0);
+        _emailProviderMockNoPriority.Setup(p => p.Priority).Returns(100);
         _emailProviderMockNoPriority.Setup(p => p.SupportedChannel).Returns(ChannelType.Email);
 
         _smsProviderMock = new Mock<INotificationProvider>();

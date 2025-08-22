@@ -1,7 +1,9 @@
 ﻿using Amazon.SimpleEmailV2;
 using Amazon.SimpleEmailV2.Model;
 using FluentAssertions;
+using Microsoft.Extensions.Options;
 using Moq;
+using NotificationMicroservice.Infrastructure.Commons;
 using NotificationMicroservice.Infrastructure.Interfaces;
 using NotificationMicroservice.Infrastructure.Providers;
 using NotificationMicroserviceTests.TestCommons;
@@ -12,10 +14,22 @@ public class AmazonEmailProviderTests_SendAsync : BaseTest
 {
     public readonly INotificationProvider _amazonEmailProvider;
     public readonly Mock<IAmazonSimpleEmailServiceV2> _sesServiceMock = new();
+    private readonly Mock<IOptionsSnapshot<Dictionary<string, ProviderConfig>>> _options = new();
 
     public AmazonEmailProviderTests_SendAsync()
     {
-        _amazonEmailProvider = new AmazonEmailProvider(_sesServiceMock.Object);
+        _options.Setup(o => o.Value).Returns(new Dictionary<string, ProviderConfig>
+        {
+            {
+                "AmazonEmail", new ProviderConfig
+                {
+                    IsEnabled = true,
+                    Name = "AmazonEmail",
+                    Priority = 1
+                }
+            }
+        });
+        _amazonEmailProvider = new AmazonEmailProvider(_sesServiceMock.Object, _options.Object);
     }
 
     [Fact]

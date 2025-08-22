@@ -7,7 +7,7 @@ public interface INotificationProvider
 {
     bool IsEnabled { get; }
 
-    string Name { get; }
+    string? Name { get; }
 
     int Priority { get; }
 

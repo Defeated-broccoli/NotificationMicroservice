@@ -1,20 +1,27 @@
-﻿using Amazon.SQS;
+﻿using Microsoft.Extensions.Options;
 using NotificationMicroservice.Domain.Enums;
 using NotificationMicroservice.Entities;
+using NotificationMicroservice.Infrastructure.Commons;
 using NotificationMicroservice.Infrastructure.Interfaces;
-using System.Text.Json.Serialization;
 
 namespace NotificationMicroservice.Infrastructure.Providers;
 
 public class AmazonSmsProvider : INotificationProvider
 {
-    public bool IsEnabled => true;
+    private readonly ProviderConfig _providerConfig;
 
-    public string Name => "AmazonSms";
+    public bool IsEnabled => _providerConfig.IsEnabled;
 
-    public int Priority => 1;
+    public string? Name => _providerConfig.Name;
+
+    public int Priority => _providerConfig.Priority;
 
     public ChannelType SupportedChannel => ChannelType.Sms;
+
+    public AmazonSmsProvider(IOptionsSnapshot<Dictionary<string, ProviderConfig>> options)
+    {
+        _providerConfig = options.Value["AmazonSms"];
+    }
 
     public async Task<bool> SendAsync(Notification notification)
     {

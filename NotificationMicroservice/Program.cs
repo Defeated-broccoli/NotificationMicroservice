@@ -6,6 +6,7 @@ using NotificationMicroservice.Application.Handlers;
 using NotificationMicroservice.Application.Interfaces;
 using NotificationMicroservice.Application.Services;
 using NotificationMicroservice.Infrastructure.BackgroundWorkers;
+using NotificationMicroservice.Infrastructure.Commons;
 using NotificationMicroservice.Infrastructure.Interfaces;
 using NotificationMicroservice.Infrastructure.Providers;
 
@@ -54,6 +55,8 @@ namespace NotificationMicroservice
                 config.UseMemoryStorage();
             });
             builder.Services.AddHangfireServer();
+
+            builder.Services.Configure<Dictionary<string, ProviderConfig>>(builder.Configuration.GetSection("NotificationProviders"));
 
             var app = builder.Build();
 

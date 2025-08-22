@@ -1,26 +1,30 @@
 ﻿using Amazon.SimpleEmailV2;
 using Amazon.SimpleEmailV2.Model;
+using Microsoft.Extensions.Options;
 using NotificationMicroservice.Domain.Enums;
 using NotificationMicroservice.Entities;
+using NotificationMicroservice.Infrastructure.Commons;
 using NotificationMicroservice.Infrastructure.Interfaces;
 
 namespace NotificationMicroservice.Infrastructure.Providers;
 
 public class AmazonEmailProvider : INotificationProvider
 {
+    private readonly ProviderConfig _providerConfig;
     private readonly IAmazonSimpleEmailServiceV2 _sesService;
 
-    public bool IsEnabled => true;
+    public bool IsEnabled => _providerConfig.IsEnabled;
 
-    public string Name => "AmazonEmail";
+    public string? Name => _providerConfig.Name;
 
-    public int Priority => 1;
+    public int Priority => _providerConfig.Priority;
 
     public ChannelType SupportedChannel => ChannelType.Email;
 
-    public AmazonEmailProvider(IAmazonSimpleEmailServiceV2 sesService)
+    public AmazonEmailProvider(IAmazonSimpleEmailServiceV2 sesService, IOptionsSnapshot<Dictionary<string, ProviderConfig>> options)
     {
         _sesService = sesService;
+        _providerConfig = options.Value["AmazonEmail"];
     }
 
     public async Task<bool> SendAsync(Notification notification)
