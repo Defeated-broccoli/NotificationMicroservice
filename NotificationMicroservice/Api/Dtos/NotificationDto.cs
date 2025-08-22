@@ -1,6 +1,5 @@
 ﻿using NotificationMicroservice.Abstractions;
 using NotificationMicroservice.Domain.Enums;
-using System.ComponentModel.DataAnnotations;
 
 namespace NotificationMicroservice.Api.Dtos;
 

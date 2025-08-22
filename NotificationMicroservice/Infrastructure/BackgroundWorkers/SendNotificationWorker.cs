@@ -4,7 +4,7 @@ using NotificationMicroservice.Application.Interfaces;
 using NotificationMicroservice.Domain.Enums;
 using NotificationMicroservice.Entities;
 using NotificationMicroservice.Infrastructure.Dtos;
-using NotificationMicroservice.Interfaces;
+using NotificationMicroservice.Infrastructure.Interfaces;
 
 namespace NotificationMicroservice.Infrastructure.BackgroundWorkers;
 

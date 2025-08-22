@@ -1,4 +1,4 @@
-﻿namespace NotificationMicroservice.Interfaces;
+﻿namespace NotificationMicroservice.Infrastructure.Interfaces;
 
 public interface IBackgroundWorker
 {

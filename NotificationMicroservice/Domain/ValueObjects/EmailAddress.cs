@@ -5,6 +5,7 @@ namespace NotificationMicroservice.Domain.ValueObjects;
 public readonly record struct EmailAddress
 {
     public string Value { get; }
+
     private EmailAddress(string value) => Value = value;
 
     public static bool TryCreate(string? input, out EmailAddress email)
